@@ -104,8 +104,10 @@ xl_ibv_comm.o: ibv/xl_ibv_comm.c ibv/xl_ibv_comm.h Makefile
 xl: main.cpp *.h Makefile options.o params.h $(IBV)
 	$(CXX) main.cpp $(LDFLAGS) $(LIBPATH) $(CXXFLAGS) $(LIBS) options.o $(IBV) -o xl
 
+test_gf: test_gf.cpp
+	$(CXX) test_gf.cpp $(LDFLAGS) $(LIBPATH) $(CXXFLAGS) $(LIBS) -o test_gf
+
 
 .PHONY: clean
 clean:
-	rm -f xl options.o xl_ibv_comm.o get_D.py
-
+	rm -f xl test_gf options.o xl_ibv_comm.o get_D.py

@@ -3,8 +3,12 @@
 
 #include <stdio.h>
 
+#if defined(__x86_64__) || defined(__i386__)
 #ifdef __SSSE3__
 #include <tmmintrin.h>
+#endif
+#else
+#include "sse2neon.h"
 #endif
 
 #include "gf.h"

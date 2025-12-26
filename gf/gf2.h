@@ -1,8 +1,12 @@
 #ifndef GF2_H
 #define GF2_H
 
+#if defined(__x86_64__) || defined(__i386__)
 #ifdef __SSSE3__
 #include <tmmintrin.h>
+#endif
+#else
+#include "sse2neon.h"
 #endif
 
 #include <cstdlib>

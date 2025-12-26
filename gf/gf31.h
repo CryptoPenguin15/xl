@@ -3,10 +3,16 @@
 
 #include <stdio.h>
 
+#if defined(__x86_64__) || defined(__i386__)
 #include <emmintrin.h>
 
 #ifdef __SSSE3__
 #include <tmmintrin.h>
+#endif
+#else
+#include "sse2neon.h"
+static const __m128i _mask_low  = _mm_set1_epi16(0x00FF);
+static const __m128i _mask_high = _mm_set1_epi16(0xFF00);
 #endif
 
 #include "gf.h"

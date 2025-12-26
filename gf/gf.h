@@ -1,6 +1,7 @@
 #ifndef _GF_H
 #define _GF_H
 
+#include <cstdlib>
 #include <stdint.h>
 
 struct gf;

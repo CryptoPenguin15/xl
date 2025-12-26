@@ -50,15 +50,15 @@ struct gfv
       }
    }
 
-   inline gfv<n>(){}
+   inline gfv(){}
 
-   inline gfv<n>(const gfv<n>& a)
+   inline gfv(const gfv<n>& a)
    { 
       for (unsigned i = M; i--; ) 
          c[i] = a.c[i]; 
    }
 
-   inline gfv<n>(const gf& a) 
+   inline gfv(const gf& a) 
    {
       for (unsigned i = M; i--; ) 
          c[i] = a; 
