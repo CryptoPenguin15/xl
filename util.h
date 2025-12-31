@@ -62,7 +62,7 @@ unsigned ceil_log(A base, B n)
     return ret;
 }
 
-inline double get_ms_time(void) 
+inline double get_ms_time(void)
 {
 	struct timeval timev;
 

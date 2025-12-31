@@ -8,12 +8,12 @@
 #define MAP_HUGETLB 0x40000 /* arch specific */
 #endif
 
-void *XL_malloc(size_t size, void* addr = NULL) 
+void *XL_malloc(size_t size, void* addr = NULL)
 {
-    size_t bytes = 
+    size_t bytes =
         ((size & ((1 << 30) - 1)) != 0) ? ((size & ~((1 << 30) - 1)) + (1 << 30)) : size;
 
-    void *ret = mmap(addr, bytes, 
+    void *ret = mmap(addr, bytes,
             PROT_READ|PROT_WRITE, MAP_HUGETLB|MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 
     if (ret == MAP_FAILED)
@@ -38,7 +38,7 @@ void XL_free(T *p, size_t size)
 {
     int err;
 
-    size_t bytes = 
+    size_t bytes =
         ((size & ((1 << 30) - 1)) != 0) ? ((size & ~((1 << 30) - 1)) + (1 << 30)) : size;
 
     ECHO("freeing %lu bytes (%lu Gb)\n", size, bytes >> 30);

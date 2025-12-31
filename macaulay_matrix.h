@@ -66,7 +66,7 @@ class macaulay_matrix
         }
 
         void gen_col_idx()
-        {	
+        {
             // for enumerating the extension monomials
             monomial<num_var> ext_mon;
 
@@ -75,7 +75,7 @@ class macaulay_matrix
                 // for enumerating monomials in the original system
                 monomial<num_var> sys_mon;
 
-                if (i % 100000 == 0) 
+                if (i % 100000 == 0)
                 {
                     ECHO_R("generating col. indices: (%u/%lu)", i, num_rb);
                     fflush(stdout);
@@ -89,7 +89,7 @@ class macaulay_matrix
 
                     sys_mon.step();
                 }
-		
+
                 ext_mon.step();
             }
 
@@ -100,7 +100,7 @@ class macaulay_matrix
 
         uint64_t num_entries() const
         {
-           return (uint64_t) this->m * 
+           return (uint64_t) this->m *
                   (uint64_t) this->sys_m;
         }
 
@@ -146,8 +146,8 @@ class macaulay_matrix
 #if QQ != 2
 
 template <unsigned M, unsigned Nb, TEMPLATE_MAC>
-inline void sparse_matrix_mad(gfv<M> *c, 
-                       const TYPE_MAC &a, 
+inline void sparse_matrix_mad(gfv<M> *c,
+                       const TYPE_MAC &a,
                        const matrix<M, Nb> &b,
                        unsigned start_row, unsigned rows,
                        unsigned start_col, unsigned cols,
@@ -170,7 +170,7 @@ inline void sparse_matrix_mad(gfv<M> *c,
         unsigned count = 0;
 
 #ifdef _OPENMP
-#pragma omp for schedule(static) 
+#pragma omp for schedule(static)
 #endif
         for(unsigned r = start_row; r < end_row; r++)
         {
@@ -201,11 +201,11 @@ inline void sparse_matrix_mad(gfv<M> *c,
 
             while (col < (end_col & (~0xf)))
             {
-                uint8_t v0, v1, v2, v3, v4, v5, v6, v7, 
+                uint8_t v0, v1, v2, v3, v4, v5, v6, v7,
                         v8, v9, v10, v11, v12, v13, v14, v15;
 
-                a.sys.L[block_row].get(col, 
-                        v0, v1, v2, v3, v4, v5, v6, v7, 
+                a.sys.L[block_row].get(col,
+                        v0, v1, v2, v3, v4, v5, v6, v7,
                         v8, v9, v10, v11, v12, v13, v14, v15);
 
                 buf[ v0 ] += *vec_ptr++;
@@ -246,11 +246,11 @@ inline void sparse_matrix_mad(gfv<M> *c,
 #elif QQ == 2
 
 template <unsigned M, unsigned Nb, TEMPLATE_MAC>
-inline void sparse_matrix_mad(gfv<M> *c, 
-                       const TYPE_MAC &a, 
+inline void sparse_matrix_mad(gfv<M> *c,
+                       const TYPE_MAC &a,
                        const matrix<M, Nb> &b,
                        unsigned start_row, unsigned rows,
-                       unsigned start_col, unsigned cols, 
+                       unsigned start_col, unsigned cols,
                        bool add)
 {
     unsigned end_row = start_row + rows;
@@ -352,14 +352,14 @@ inline void sparse_matrix_mad(gfv<M> *c,
     }
 }
 
-#endif // QQ 
+#endif // QQ
 
 /////////////////////////// this function is meant to reduce ///////////////////////////
 /////////////////////////// the working set                  ///////////////////////////
 
 template <unsigned M, unsigned Nb, TEMPLATE_MAC>
-void sparse_matrix_mad(gfv<M> *c, 
-                       TYPE_MAC &a, 
+void sparse_matrix_mad(gfv<M> *c,
+                       TYPE_MAC &a,
                        const matrix<M, Nb> &b,
                        unsigned start_row, unsigned rows,
                        bool add)
@@ -385,8 +385,8 @@ void sparse_matrix_mad(gfv<M> *c,
 /////////////// mult(cL, a, b): cL = gfv* : a = mac_matrix : b = matrix ////////////
 
 template <unsigned M, unsigned Nb, TEMPLATE_MAC>
-inline void sparse_matrix_mad(gfv<M> *c, 
-                               TYPE_MAC &a, 
+inline void sparse_matrix_mad(gfv<M> *c,
+                               TYPE_MAC &a,
                                matrix<M, Nb> &b)
 {
     sparse_matrix_mad(c, a, b, 0, a.height, true);
@@ -395,7 +395,7 @@ inline void sparse_matrix_mad(gfv<M> *c,
 /////////////////// mult(c, a, b): c, b = matrix : a = mac_matrix ///////////////
 
 template <unsigned M, unsigned Nc, unsigned Nb, TEMPLATE_MAC>
-inline void sparse_matrix_mad(matrix<M, Nc> &c, 
+inline void sparse_matrix_mad(matrix<M, Nc> &c,
                                const TYPE_MAC &a,
                                matrix<M, Nb> &b)
 {
@@ -403,8 +403,8 @@ inline void sparse_matrix_mad(matrix<M, Nc> &c,
 }
 
 template <unsigned M, unsigned Nb, TEMPLATE_MAC>
-void sparse_matrix_prod(gfv<M> *c, 
-                       const TYPE_MAC &a, 
+void sparse_matrix_prod(gfv<M> *c,
+                       const TYPE_MAC &a,
                        const matrix<M, Nb> &b,
                        unsigned start_row, unsigned rows)
 {
@@ -412,8 +412,8 @@ void sparse_matrix_prod(gfv<M> *c,
 }
 
 template <unsigned M, unsigned Nc, unsigned Nb, TEMPLATE_MAC>
-inline void sparse_matrix_prod(matrix<M, Nc> &c, 
-                               TYPE_MAC &a, 
+inline void sparse_matrix_prod(matrix<M, Nc> &c,
+                               TYPE_MAC &a,
                                matrix<M, Nb> &b)
 {
     sparse_matrix_mad(c.L, a, b, 0, a.height, false);

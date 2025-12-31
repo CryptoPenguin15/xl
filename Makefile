@@ -10,6 +10,9 @@ Q = 16
 M = 12
 N = 10
 
+## NUMA
+NUMA = USE_NUMA
+
 ## no MPI:
 BW1_ALGO = BW1
 
@@ -65,9 +68,14 @@ CXXFLAGS= -O3 -fopenmp -Wall $(DEFINES) -march=native -mtune=native -Wfatal-erro
 # silence memcpy warnings
 CXXFLAGS  += -Wno-class-memaccess
 
-LDFLAGS= 
-LIBPATH= 
-LIBS= -lnuma
+LDFLAGS=
+LIBPATH=
+ifeq ($(NUMA), USE_NUMA)
+CXXFLAGS += -DNUMA
+LIBS += -lnuma
+else
+LIBS=
+endif
 
 ifndef SAGE
 SAGE=sage
@@ -83,7 +91,7 @@ endif
 endif
 
 ifeq ($(MPI), MPI)
-	CC = mpicc	
+	CC = mpicc
 	CXX = mpic++
 	LD = mpic++
 endif

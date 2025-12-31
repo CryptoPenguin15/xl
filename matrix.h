@@ -136,13 +136,13 @@ struct matrix
 #ifdef _OPENMP
         #pragma omp parallel for
 #endif
-       for(unsigned i = start; i < start + rows; i++) 
+       for(unsigned i = start; i < start + rows; i++)
            L[i].set_zero();
    }
 
    inline bool is_zero()
    {
-      for(unsigned i = 0; i < N; i++) 
+      for(unsigned i = 0; i < N; i++)
          if( !L[i].is_zero() )
             return false;
 
@@ -150,27 +150,27 @@ struct matrix
    }
 
    inline void rand()
-   { 
+   {
       for(unsigned i=n; i--;)
-            this->L[i].rand(); 
+            this->L[i].rand();
    }
 
    inline void rand(uint32_t row_weight)
-   { 
+   {
       for(unsigned i=n; i--;)
-            this->L[i].rand(row_weight); 
+            this->L[i].rand(row_weight);
    }
 
-   void transpose(matrix<N, M> &mat) const 
-   { 
-      for(unsigned i = 0; i < M; i++) 
-         for (unsigned j = 0; j < N; j++) 
+   void transpose(matrix<N, M> &mat) const
+   {
+      for(unsigned i = 0; i < M; i++)
+         for (unsigned j = 0; j < N; j++)
             mat.L[i].set(j, this->L[j][i]);
    }
-  
-   inline void dump( FILE * fp ) const 
-   { 
-      for(int i = 0; i < (int)n; i++) 
+
+   inline void dump( FILE * fp ) const
+   {
+      for(int i = 0; i < (int)n; i++)
          this->L[i].dump(fp);
    }
 
@@ -181,7 +181,7 @@ struct matrix
       ret.v = 0;
       for(unsigned i = 0; i < N; i++)
          ret += L[i].hash();
-   
+
       return ret;
    }
 
@@ -192,9 +192,9 @@ struct matrix
 #define MAX_UNITS 8
 
 template <unsigned ma, unsigned mb, unsigned nc, unsigned na, unsigned units>
-inline void matrix_mad_special(matrix<mb, nc> &c, 
-                               const matrix<ma, na> &a, 
-                               const gfv<mb> *b, 
+inline void matrix_mad_special(matrix<mb, nc> &c,
+                               const matrix<ma, na> &a,
+                               const gfv<mb> *b,
                                unsigned start_row, unsigned rows,
                                unsigned start_col, unsigned cols,
                                unsigned start_unit)
@@ -210,7 +210,7 @@ inline void matrix_mad_special(matrix<mb, nc> &c,
       for(unsigned j = 1; j < gfv<mb>::GF; j++)
             buf[j].set_zero();
 
-      for(unsigned j = start_col; j < start_col + cols; j += 16)   
+      for(unsigned j = start_col; j < start_col + cols; j += 16)
       {
          a.L[i].get(j, v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15);
 
@@ -245,9 +245,9 @@ inline void matrix_mad_special(matrix<mb, nc> &c,
 /////////////////////////// reduce the working set    ///////////////////////////
 
 template <unsigned ma, unsigned mb, unsigned nc, unsigned na>
-void matrix_mad_special(matrix<mb, nc> &c, 
-                        const matrix<ma, na> &a, 
-                        const gfv<mb> *b, 
+void matrix_mad_special(matrix<mb, nc> &c,
+                        const matrix<ma, na> &a,
+                        const gfv<mb> *b,
                         unsigned n)
 {
    //const unsigned block_size = (1 << 15); // ???
@@ -259,7 +259,7 @@ void matrix_mad_special(matrix<mb, nc> &c,
    const unsigned w = 256;
 #else
    const unsigned w = 256;
-#endif   
+#endif
 
    for(unsigned unit = 0; unit + MAX_UNITS <= gfv<mb>::M; unit += MAX_UNITS)
    {
@@ -267,7 +267,7 @@ void matrix_mad_special(matrix<mb, nc> &c,
       {
          matrix_mad_special<ma, mb, nc, na, MAX_UNITS>
                            (c, a, b, 0, n, col, min(w, ma-col), unit);
-      }   
+      }
    }
 
    const unsigned tail = gfv<mb>::M % MAX_UNITS;
@@ -278,7 +278,7 @@ void matrix_mad_special(matrix<mb, nc> &c,
       {
          matrix_mad_special<ma, mb, nc, na, tail>
                            (c, a, b, 0, n, col, min(w, ma-col), gfv<mb>::M - tail);
-      }   
+      }
    }
 }
 
@@ -287,8 +287,8 @@ void matrix_mad_special(matrix<mb, nc> &c,
 #define MAX_UNITS 8
 
 template <unsigned units, unsigned mb, unsigned nb, unsigned na>
-void matrix_mad(matrix<mb, na> &c, 
-                const matrix<nb, na> &a, 
+void matrix_mad(matrix<mb, na> &c,
+                const matrix<nb, na> &a,
                 const matrix<mb, nb> &b,
                 unsigned start_row, unsigned rows,
                 unsigned start_col, unsigned cols,
@@ -309,7 +309,7 @@ void matrix_mad(matrix<mb, na> &c,
         for(unsigned j = 1; j < gfv<mb>::GF; j++)
                 buf[j].set_zero();
 
-        for(unsigned j = start_col; j < start_col + cols; j += 16)    
+        for(unsigned j = start_col; j < start_col + cols; j += 16)
         {
             a.L[i].get(j, v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15);
 
@@ -345,8 +345,8 @@ void matrix_mad(matrix<mb, na> &c,
 /////////////////////////// reduce the working set    ///////////////////////////
 
 template <unsigned mb, unsigned nb, unsigned na>
-inline void matrix_mad(matrix<mb, na> &c, 
-                const matrix<nb, na> &a, 
+inline void matrix_mad(matrix<mb, na> &c,
+                const matrix<nb, na> &a,
                 const matrix<mb, nb> &b,
                 unsigned start_row=0, unsigned rows=na)
 {
@@ -356,7 +356,7 @@ inline void matrix_mad(matrix<mb, na> &c,
     const unsigned w = 512;
 #else
     const unsigned w = 256;
-#endif    
+#endif
 
     const unsigned ma = nb;
 
@@ -366,7 +366,7 @@ inline void matrix_mad(matrix<mb, na> &c,
         {
             matrix_mad<MAX_UNITS>
                 (c, a, b, start_row, rows, col, min(w, ma-col), unit);
-        }    
+        }
     }
 
     const unsigned tail = gfv<mb>::M % MAX_UNITS;
@@ -377,13 +377,13 @@ inline void matrix_mad(matrix<mb, na> &c,
         {
             matrix_mad<tail>
                 (c, a, b, start_row, rows, col, min(w, ma-col), gfv<mb>::M - tail);
-        }    
+        }
     }
 }
 
 template <unsigned mb, unsigned nb, unsigned na>
-inline void matrix_prod(matrix<mb, na> &c, 
-                const matrix<nb, na> &a, 
+inline void matrix_prod(matrix<mb, na> &c,
+                const matrix<nb, na> &a,
                 const matrix<mb, nb> &b,
                 unsigned start_row=0, unsigned rows=na)
 {

@@ -5,7 +5,7 @@
 #endif
 
 #ifdef MPI
-extern unsigned mpi_rank, mpi_size; 
+extern unsigned mpi_rank, mpi_size;
 #else
 const unsigned mpi_rank = 0;
 const unsigned mpi_size = 1;
@@ -265,7 +265,7 @@ void Options::parse(int argc, char * argv[])
                 {
                     char *endp;
 
-                    if ((strcmp(optarg, "random") == 0) || 
+                    if ((strcmp(optarg, "random") == 0) ||
                             (strcmp(optarg, "rand") == 0)  ||
                             (strcmp(optarg, "r") == 0))
                         this->seed = time(NULL);
@@ -316,7 +316,7 @@ void Options::parse(int argc, char * argv[])
                          optarg[i] = tmp;
 
                          start = i+1;
-                      }                      
+                      }
                 }
                 break;
 

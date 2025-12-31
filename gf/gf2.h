@@ -17,7 +17,7 @@ const unsigned gf::p = 2;
 
 inline const gf _mul( const gf &a , const gf &b)
 {
-   return a.v & b.v;   
+   return a.v & b.v;
 }
 
 inline const gf _inv( const gf  &a )
@@ -44,9 +44,9 @@ struct gfv_unit
 
    inline gfv_unit(const __m128i& a) : v(a) {}
 
-   inline gfv_unit& operator=(const gfv_unit &b) 
-   { 
-      v=b.v; 
+   inline gfv_unit& operator=(const gfv_unit &b)
+   {
+      v=b.v;
       return *this;
    }
 
@@ -55,15 +55,15 @@ struct gfv_unit
       this->v = _mm_xor_si128(a.v, b.v);
    }
 
-   inline gfv_unit& operator+=(const gfv_unit &b) 
-   { 
-      v = _mm_xor_si128(v, b.v); 
+   inline gfv_unit& operator+=(const gfv_unit &b)
+   {
+      v = _mm_xor_si128(v, b.v);
       return *this;
    }
 
-   inline gfv_unit& operator-=(const gfv_unit &b) 
-   { 
-      v = _mm_xor_si128(v, b.v); 
+   inline gfv_unit& operator-=(const gfv_unit &b)
+   {
+      v = _mm_xor_si128(v, b.v);
       return *this;
    }
 
@@ -80,7 +80,7 @@ struct gfv_unit
       v1  = (uint8_t)(val >>  (1 + (idx & 6))) & 1;
    }
 
-   inline void get(unsigned idx, uint8_t &v0, uint8_t &v1, 
+   inline void get(unsigned idx, uint8_t &v0, uint8_t &v1,
          uint8_t &v2, uint8_t &v3) const
    {
       uint8_t val = ((uint8_t*)&v)[(idx >> 3)];
@@ -91,7 +91,7 @@ struct gfv_unit
       v3  = (uint8_t)(val >>  (3 + (idx & 4))) & 1;
    }
 
-   inline void get(unsigned idx, uint8_t &v0, uint8_t &v1, 
+   inline void get(unsigned idx, uint8_t &v0, uint8_t &v1,
          uint8_t &v2, uint8_t &v3,
          uint8_t &v4, uint8_t &v5, uint8_t &v6, uint8_t &v7) const
    {
@@ -107,11 +107,11 @@ struct gfv_unit
       v7  = (uint8_t)(val >>  7) & 1;
    }
 
-   inline void get(unsigned idx, uint8_t &v0, uint8_t &v1, 
+   inline void get(unsigned idx, uint8_t &v0, uint8_t &v1,
          uint8_t &v2, uint8_t &v3,
          uint8_t &v4, uint8_t &v5, uint8_t &v6, uint8_t &v7,
          uint8_t &v8, uint8_t &v9, uint8_t &va, uint8_t &vb,
-         uint8_t &vc, uint8_t &vd, uint8_t &ve, uint8_t &vf) const 
+         uint8_t &vc, uint8_t &vd, uint8_t &ve, uint8_t &vf) const
    {
       uint16_t val = (((uint16_t*)&v)[idx >> 4]);
 
@@ -123,7 +123,7 @@ struct gfv_unit
       v5 = (uint8_t)(val >> 0x5) & 1;
       v6 = (uint8_t)(val >> 0x6) & 1;
       v7 = (uint8_t)(val >> 0x7) & 1;
-          
+
       v8 = (uint8_t)(val >> 0x8) & 1;
       v9 = (uint8_t)(val >> 0x9) & 1;
       va = (uint8_t)(val >> 0xa) & 1;
@@ -137,28 +137,28 @@ struct gfv_unit
       //get(idx + 8, v8, v9, va, vb, vc, vd, ve, vf);
     }
 
-   inline bool is_zero() const 
-   { 
-      __m128i a = _mm_or_si128(v,_mm_srli_si128(v,8)); 
-      return 0 == _mm_cvtsi128_si32(_mm_or_si128(a,_mm_srli_si128(a,4))); 
-   }   
-   
-   inline static const gfv_unit rand() 
-   { 
-      return _mm_set_epi16(::rand(), ::rand(), ::rand(), ::rand(), 
-                                     ::rand(), ::rand(), ::rand(), ::rand());  
+   inline bool is_zero() const
+   {
+      __m128i a = _mm_or_si128(v,_mm_srli_si128(v,8));
+      return 0 == _mm_cvtsi128_si32(_mm_or_si128(a,_mm_srli_si128(a,4)));
    }
 
-   inline gfv_unit& operator*=(const gf &b) 
-   { 
+   inline static const gfv_unit rand()
+   {
+      return _mm_set_epi16(::rand(), ::rand(), ::rand(), ::rand(),
+                                     ::rand(), ::rand(), ::rand(), ::rand());
+   }
+
+   inline gfv_unit& operator*=(const gf &b)
+   {
       this->v = _mm_and_si128(this->v, GFV2Mul[b.v]);
 
       return *this;
    }
 
-   inline void set(unsigned i, const gf &a) 
+   inline void set(unsigned i, const gf &a)
    {
-#ifdef __SSSE3__ 
+#ifdef __SSSE3__
        char b = _mm_cvtsi128_si64(_mm_shuffle_epi8(v, _mm_cvtsi32_si128(i >> 3)));
        ((char *)&v)[i >> 3] = b ^ ((b ^ (a.v << (i & 7))) & (1 << (i & 7)));
 #else
@@ -167,7 +167,7 @@ struct gfv_unit
 #endif
    }
 
-   inline const gf operator[](unsigned idx) const 
+   inline const gf operator[](unsigned idx) const
    {
        uint8_t* tmp = (uint8_t*)(&this->v);
 

@@ -18,15 +18,15 @@ struct gfv
 
    unit c[M];
 
-   inline bool is_zero() const 
-   { 
+   inline bool is_zero() const
+   {
       if (M > 1)
       {
-         unit u; 
+         unit u;
 
-         u.v = c[M-2].v; 
+         u.v = c[M-2].v;
 
-         for (unsigned i = M-2; i--; ) 
+         for (unsigned i = M-2; i--; )
             u.v = _mm_or_si128(u.v, c[i].v);
 
          if (!u.is_zero())
@@ -53,21 +53,21 @@ struct gfv
    inline gfv(){}
 
    inline gfv(const gfv<n>& a)
-   { 
-      for (unsigned i = M; i--; ) 
-         c[i] = a.c[i]; 
-   }
-
-   inline gfv(const gf& a) 
    {
-      for (unsigned i = M; i--; ) 
-         c[i] = a; 
+      for (unsigned i = M; i--; )
+         c[i] = a.c[i];
    }
 
-   inline gfv<n>& operator=(const gfv<n> &b) 
-   { 
+   inline gfv(const gf& a)
+   {
       for (unsigned i = M; i--; )
-         c[i] = b.c[i]; 
+         c[i] = a;
+   }
+
+   inline gfv<n>& operator=(const gfv<n> &b)
+   {
+      for (unsigned i = M; i--; )
+         c[i] = b.c[i];
       return *this;
    }
 
@@ -87,34 +87,34 @@ struct gfv
 
    inline gfv<n>& operator+=(const gfv<n> &b)
    {
-      for (unsigned i = M; i--; ) 
-         c[i] += b.c[i]; 
+      for (unsigned i = M; i--; )
+         c[i] += b.c[i];
 
       return *this;
    }
 
    inline void add_nored(const gfv<n> &b)
    {
-      for (unsigned i = M; i--; ) 
+      for (unsigned i = M; i--; )
          c[i].add_nored(b.c[i]);
    }
 
    inline void reduce()
    {
-      for (unsigned i = M; i--; ) 
+      for (unsigned i = M; i--; )
          c[i].reduce();
    }
 
    inline void part_reduce()
    {
-      for (unsigned i = M; i--; ) 
+      for (unsigned i = M; i--; )
          c[i].part_reduce();
    }
 
    inline gfv<n>& operator-=(const gfv<n> &b)
    {
-      for (unsigned i = M; i--; ) 
-         c[i] -= b.c[i]; 
+      for (unsigned i = M; i--; )
+         c[i] -= b.c[i];
 
       return *this;
    }
@@ -123,71 +123,71 @@ struct gfv
    {
       gfv<n> ret;
 
-      for (unsigned i = M; i--; ) 
-         ret.c[i] = - this->c[i]; 
+      for (unsigned i = M; i--; )
+         ret.c[i] = - this->c[i];
 
       return ret;
    }
 
-   inline const gfv<n> operator+(const gfv<n> &b) const 
+   inline const gfv<n> operator+(const gfv<n> &b) const
    {
-      gfv<n> r = (*this); 
-      r += b; 
+      gfv<n> r = (*this);
+      r += b;
       return r;
    }
 
-   inline gfv<n>& operator*=(const gf &b) 
+   inline gfv<n>& operator*=(const gf &b)
    {
-      for (unsigned i = M; i--; ) 
-         c[i] *= b; 
-      return *this; 
+      for (unsigned i = M; i--; )
+         c[i] *= b;
+      return *this;
    }
 
-   inline gfv<n>& operator*=(const gfv<n>&b) 
-   { 
-      for (unsigned i = M; i--; ) 
+   inline gfv<n>& operator*=(const gfv<n>&b)
+   {
+      for (unsigned i = M; i--; )
          c[i] *= b.c[i];
-      return *this; 
+      return *this;
    }
 
-   inline const gfv<n> operator*(const gf &b) const 
-   { 
-      gfv<n> r=(*this); 
-      r*=b; 
-      return r; 
+   inline const gfv<n> operator*(const gf &b) const
+   {
+      gfv<n> r=(*this);
+      r*=b;
+      return r;
    }
 
-   inline void mad(const gfv<n> &a, 
-         const gf &b) 
+   inline void mad(const gfv<n> &a,
+         const gf &b)
    {
       for(unsigned i = 0; i < M; i++)
          c[i].mad(a.c[i], b);
    }
 
-   inline void set_zero() 
-   { 
-      for (unsigned i = 0; i < M; i++) 
-         c[i]=_mm_setzero_si128(); 
+   inline void set_zero()
+   {
+      for (unsigned i = 0; i < M; i++)
+         c[i]=_mm_setzero_si128();
    }
 
    inline void set( unsigned i, const gf & a )
-   { 
-      c[i >> unit::B].set(i & (unit::N-1), a); 
+   {
+      c[i >> unit::B].set(i & (unit::N-1), a);
    }
 
    inline void set( unsigned i, uint8_t v0, uint8_t v1)
    {
-      c[i >> unit::B].set(i & (unit::N-1), v0, v1); 
+      c[i >> unit::B].set(i & (unit::N-1), v0, v1);
    }
 
    inline void set( unsigned i, uint8_t v0, uint8_t v1, uint8_t v2, uint8_t v3)
-   { 
-      c[i >> unit::B].set(i & (unit::N-1), v0, v1, v2, v3); 
+   {
+      c[i >> unit::B].set(i & (unit::N-1), v0, v1, v2, v3);
    }
 
-   inline const gf operator[](uint64_t i) const 
+   inline const gf operator[](uint64_t i) const
    {
-      return (c[i >> unit::B])[i & (unit::N-1)]; 
+      return (c[i >> unit::B])[i & (unit::N-1)];
    }
 
    inline gf get(unsigned i) const
@@ -195,58 +195,58 @@ struct gfv
       return (c[i >> unit::B])[i & (unit::N-1)];
    }
 
-   inline void get(unsigned i, uint8_t &v0, uint8_t &v1) const 
+   inline void get(unsigned i, uint8_t &v0, uint8_t &v1) const
    {
-      c[i >> unit::B].get(i & (unit::N-1), v0, v1); 
+      c[i >> unit::B].get(i & (unit::N-1), v0, v1);
    }
 
-   inline void get(unsigned i, uint8_t &v0, uint8_t &v1, 
-         uint8_t &v2, uint8_t &v3) const 
+   inline void get(unsigned i, uint8_t &v0, uint8_t &v1,
+         uint8_t &v2, uint8_t &v3) const
    {
-      c[i >> unit::B].get(i & (unit::N-1), v0, v1, v2, v3); 
+      c[i >> unit::B].get(i & (unit::N-1), v0, v1, v2, v3);
    }
 
-   inline void get(unsigned i, uint8_t &v0, uint8_t &v1, 
+   inline void get(unsigned i, uint8_t &v0, uint8_t &v1,
          uint8_t &v2, uint8_t &v3,
-         uint8_t &v4, uint8_t &v5, uint8_t &v6, uint8_t &v7) const 
+         uint8_t &v4, uint8_t &v5, uint8_t &v6, uint8_t &v7) const
    {
-      c[i >> unit::B].get(i & (unit::N-1), v0, v1, v2, v3, v4, v5, v6, v7); 
+      c[i >> unit::B].get(i & (unit::N-1), v0, v1, v2, v3, v4, v5, v6, v7);
    }
 
-   inline void get(unsigned i, uint8_t &v0, uint8_t &v1, 
+   inline void get(unsigned i, uint8_t &v0, uint8_t &v1,
          uint8_t &v2, uint8_t &v3,
          uint8_t &v4, uint8_t &v5, uint8_t &v6, uint8_t &v7,
          uint8_t &v8, uint8_t &v9, uint8_t &v10, uint8_t &v11,
-         uint8_t &v12, uint8_t &v13, uint8_t &v14, uint8_t &v15) const 
+         uint8_t &v12, uint8_t &v13, uint8_t &v14, uint8_t &v15) const
    {
-      c[i >> unit::B].get(i & (unit::N-1), v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15); 
+      c[i >> unit::B].get(i & (unit::N-1), v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15);
    }
 
-   inline const gf dot(const gfv<n> &b) const 
-   { 
+   inline const gf dot(const gfv<n> &b) const
+   {
       gfv<n> rv=(*this)*b;
 
-      if( n&15 ) 
+      if( n&15 )
          rv.c[M-1].v = _mm_slli_si128(rv.c[M-1].v,16-(n&15));
 
-      for(unsigned i=1; i<M; i++) 
+      for(unsigned i=1; i<M; i++)
          rv.c[0] += rv.c[i];
 
-      return rv.c[0].add_up(); 
+      return rv.c[0].add_up();
    }
 
-   void dump(FILE * fp) const 
-   { 
-      for(unsigned i=0;i<n;i++) 
-         fprintf(fp, GF_FMT " ",(int)((*this)[i].v)); 
-
-      fprintf(fp,"\n"); 
-   }
-
-   inline void rand() 
+   void dump(FILE * fp) const
    {
-      for(unsigned i=M; i--;) 
-         c[i] = unit::rand(); 
+      for(unsigned i=0;i<n;i++)
+         fprintf(fp, GF_FMT " ",(int)((*this)[i].v));
+
+      fprintf(fp,"\n");
+   }
+
+   inline void rand()
+   {
+      for(unsigned i=M; i--;)
+         c[i] = unit::rand();
    }
 
    inline void rand(uint32_t row_weight)
@@ -318,7 +318,7 @@ struct gfv
    }
 
    inline void sum(const gfv<n> &v, const gfv<n> &w)
-   { 
+   {
       for (unsigned i = M; i--; )
          c[i].sum(v.c[i], w.c[i]);
    }
@@ -423,7 +423,7 @@ struct gfv
 
 #ifdef __SSSE3__
       (*this) += table[2] * gf(2); // why is * faster than *= ?
-      (*this) += table[4] * gf(4); 
+      (*this) += table[4] * gf(4);
       (*this) += table[8] * gf(8);
 #else
       (*this) += table[2].prod2(table[2]);

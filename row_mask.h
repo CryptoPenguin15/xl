@@ -38,7 +38,7 @@ public:
 
            for(unsigned rb = 0; rb < num_rb; rb++)
            {
-               if(rb % 10000 == 0) 
+               if(rb % 10000 == 0)
                {
                    ECHO_R("generating mask: (%u/%u)", rb, num_rb);
                    fflush(stdout);
@@ -46,11 +46,11 @@ public:
 
                unsigned idx;
 
-               for(uint64_t row = (uint64_t)rb * (uint64_t)height / (uint64_t)num_rb; 
+               for(uint64_t row = (uint64_t)rb * (uint64_t)height / (uint64_t)num_rb;
                        row < (uint64_t)(rb + 1) * (uint64_t)height / (uint64_t)num_rb;
                        row++)
                {
-                   do 
+                   do
                    {
                        idx = rand() % Sys_n;
                    }
@@ -68,7 +68,7 @@ public:
                {
                    if(mask[i])
                    {
-                       L[ t++ ] = i + rb * Sys_n;              
+                       L[ t++ ] = i + rb * Sys_n;
                        mask[i] = 0;
                        cnt++;
                    }

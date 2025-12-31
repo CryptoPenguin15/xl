@@ -38,7 +38,7 @@ double CPU_FREQ;
 double GLOBAL_start_time;
 
 #ifdef OPEN_MPI
-unsigned mpi_rank, mpi_size; 
+unsigned mpi_rank, mpi_size;
 #else // #ifdef OPEN_MPI
 const unsigned mpi_rank = 0;
 const unsigned mpi_size = 1;
@@ -49,7 +49,9 @@ const unsigned mpi_size = 1;
 
 #include "xl.h"
 
+#ifdef NUMA
 #include <numa.h>
+#endif
 
 void dump_proc_status()
 {
@@ -86,32 +88,32 @@ float get_cpu_freq()
 
       fclose(f);
 
-      return freq; 
+      return freq;
    }
    else
    {
       f = fopen("/proc/cpuinfo", "r");
-   
+
       do
       {
          if (strncmp("cpu MHz", buf, 7) == 0)
          {
             uint32_t pos = 0;
-   
+
             while ((pos <= (strlen(buf)-1)) && (buf[pos] != ':'))
                pos ++;
-   
+
             pos ++;
-   
+
             double freq = atof(buf + pos);
-   
+
             fclose(f);
-   
+
             return freq;
          }
       }
       while (fgets(buf, 1024, f) != NULL);
-   
+
       fclose(f);
    }
 
@@ -190,7 +192,7 @@ void setup(int argc, char * argv[], Options *options)
     if (mpi_size != MPI_SIZE)
     {
         if (mpi_rank == 0)
-            fprintf(stderr, 
+            fprintf(stderr,
                 "%s was compiled for %i nodes!\n"
                 "Please run 'mpirun ... -n %i ... %s'\n",
                 argv[0], MPI_SIZE, MPI_SIZE, argv[0]);
@@ -203,11 +205,13 @@ void setup(int argc, char * argv[], Options *options)
 
     options->parse(argc, argv);
 
+#ifdef NUMA
     if (options->bind != NULL)
        numa_run_on_node(options->bind[mpi_rank]);
+#endif // #ifdef NUMA
 
 #ifdef OPEN_MPI
-    MPI_Bcast(&options->seed, sizeof(options->seed), MPI_BYTE, 0, 
+    MPI_Bcast(&options->seed, sizeof(options->seed), MPI_BYTE, 0,
           MPI_COMM_WORLD);
 #endif // #ifdef OPEN_MPI
 
@@ -249,8 +253,8 @@ int main(int argc, char *argv[])
        ECHO_NL();
        ECHO("total time of computation: %.3f ms\n", comp_time);
     }
-    catch (BW_Exception &e) 
-    { 
+    catch (BW_Exception &e)
+    {
         ECHO_NL();
         ECHO("BW did not return solution; run all steps up to bw3.\nExiting...\n\n");
     }

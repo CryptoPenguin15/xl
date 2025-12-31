@@ -20,7 +20,7 @@
 #include "bw3.h"
 
 
-class BW_Exception 
+class BW_Exception
 {
     const char *msg;
 
@@ -42,14 +42,14 @@ class BW
    BW(Options *options) : options(options) {}
 
    template <unsigned m, unsigned n, unsigned N, unsigned deg>
-   void bw1_read(sparse_matrix<n, N, Z_ROW_WEIGHT> &z_sp, 
+   void bw1_read(sparse_matrix<n, N, Z_ROW_WEIGHT> &z_sp,
          matrix_array<m, n, deg> &ai)
    {
       FILE *fd = NULL;
 
       if (mpi_rank == 0)
       {
-         ECHO("rank %i reading result of bw1 from file '%s'\n", 
+         ECHO("rank %i reading result of bw1 from file '%s'\n",
                mpi_rank, options->bw1_file);
 
          fd = fopen(options->bw1_file, "r");
@@ -82,7 +82,7 @@ class BW
    }
 
    template <unsigned m, unsigned n, unsigned N, unsigned deg>
-   void bw1_write(sparse_matrix<n, N, Z_ROW_WEIGHT> &z_sp, 
+   void bw1_write(sparse_matrix<n, N, Z_ROW_WEIGHT> &z_sp,
          matrix_array<m, n, deg> &ai)
    {
       FILE *fd = NULL;
@@ -107,7 +107,7 @@ class BW
    }
 
    template <unsigned n, unsigned N, unsigned m, unsigned deg_poly, unsigned deg_ai>
-   void bm_read(sparse_matrix<n, N, Z_ROW_WEIGHT> &z_sp, 
+   void bm_read(sparse_matrix<n, N, Z_ROW_WEIGHT> &z_sp,
          matrix_polynomial<n, m+n, deg_poly> &min_poly,
          matrix_array<m, n, deg_ai> &ai)
    {
@@ -134,7 +134,7 @@ class BW
    }
 
    template <unsigned n, unsigned N, unsigned m, unsigned deg_poly, unsigned deg_ai>
-   void bm_write(sparse_matrix<n, N, Z_ROW_WEIGHT> &z_sp, 
+   void bm_write(sparse_matrix<n, N, Z_ROW_WEIGHT> &z_sp,
          matrix_polynomial<n, m+n, deg_poly> &min_poly,
          matrix_array<m, n, deg_ai> &ai)
    {
@@ -185,7 +185,7 @@ class BW
 
 //#ifdef _OPENMP
 //      // make z NUMA aware
-//#pragma omp parallel for schedule(static) 
+//#pragma omp parallel for schedule(static)
 //      for(unsigned r = 0; r < N; r++)
 //         z_sp->L[r].set_zero();
 //#endif
@@ -228,7 +228,7 @@ class BW
 
       if (!options->bw3_run)
          throw BW_Exception("did not finish all steps for BW");
-   }    
+   }
 
 };
 

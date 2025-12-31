@@ -40,7 +40,7 @@ uint16_t xl_ibv_get_local_lid(struct ibv_context *context, int port)
    return attr.lid;
 }
 
-int xl_ibv_connect_ctx(struct ibv_qp *qp, int port, 
+int xl_ibv_connect_ctx(struct ibv_qp *qp, int port,
            int my_psn,
            enum ibv_mtu mtu, int sl,
            struct xl_ibv_dest *dest)
@@ -102,10 +102,10 @@ void xl_ibv_exch_dest(const struct xl_ibv_dest *loc_dest,
 
    for (int i = (mpi_rank + 1) % mpi_size; i != mpi_rank; i = (i + 1) % mpi_size)
    {
-      MPI_Isend((void*)&loc_dest[i], sizeof(struct xl_ibv_dest), MPI_BYTE, 
+      MPI_Isend((void*)&loc_dest[i], sizeof(struct xl_ibv_dest), MPI_BYTE,
             i, 1, MPI_COMM_WORLD, &send[i]);
 
-      MPI_Irecv((void*)&rem_dest[i], sizeof(struct xl_ibv_dest), MPI_BYTE, 
+      MPI_Irecv((void*)&rem_dest[i], sizeof(struct xl_ibv_dest), MPI_BYTE,
             i, 1, MPI_COMM_WORLD, &recv[i]);
    }
 
@@ -179,7 +179,7 @@ struct xl_ibv_context *xl_ibv_init_ctx()
 }
 
 
-struct xl_ibv_context * xl_ibv_init_qp(struct xl_ibv_context *ctx, 
+struct xl_ibv_context * xl_ibv_init_qp(struct xl_ibv_context *ctx,
       struct ibv_send_wr **send_wr, struct ibv_recv_wr **recv_wr)
 {
 
@@ -213,9 +213,9 @@ struct xl_ibv_context * xl_ibv_init_qp(struct xl_ibv_context *ctx,
       return NULL;
    }
 
-   struct xl_ibv_dest *loc_dest = 
+   struct xl_ibv_dest *loc_dest =
       (struct xl_ibv_dest*)malloc(mpi_size * sizeof(struct xl_ibv_dest));
-   struct xl_ibv_dest *rem_dest = 
+   struct xl_ibv_dest *rem_dest =
       (struct xl_ibv_dest*)malloc(mpi_size * sizeof(struct xl_ibv_dest));
 
    ctx->qp = (struct ibv_qp**)malloc(mpi_size * sizeof(struct ibv_qp*));
@@ -223,7 +223,7 @@ struct xl_ibv_context * xl_ibv_init_qp(struct xl_ibv_context *ctx,
    for (int i = (mpi_rank + 1) % mpi_size; i != mpi_rank; i = (i + 1) % mpi_size)
    {
       {
-              
+
 
          struct ibv_qp_init_attr attr = {
             .send_cq = ctx->cq,
@@ -277,8 +277,8 @@ struct xl_ibv_context * xl_ibv_init_qp(struct xl_ibv_context *ctx,
 
    for (int i = (mpi_rank + 1) % mpi_size; i != mpi_rank; i = (i + 1) % mpi_size)
    {
-      if (xl_ibv_connect_ctx(ctx->qp[i], ctx->port[i % ctx->port_cnt], 
-               loc_dest[i].psn, XL_IBV_MTU, XL_IBV_SL, 
+      if (xl_ibv_connect_ctx(ctx->qp[i], ctx->port[i % ctx->port_cnt],
+               loc_dest[i].psn, XL_IBV_MTU, XL_IBV_SL,
                &rem_dest[i]))
       {
          fprintf(stderr, "Couldn't connect to remote QP\n");
@@ -402,22 +402,22 @@ void ibv_wait(struct xl_ibv_context *ctx, struct ibv_handle *handle)
 
       if (wc.status != IBV_WC_SUCCESS)
       {
-         printf("%s:%i -- comm error: %s\n", __FILE__, __LINE__, 
+         printf("%s:%i -- comm error: %s\n", __FILE__, __LINE__,
                ibv_wc_status_str(wc.status));
          ABORT;
       }
 
       ((struct ibv_handle*)wc.wr_id)->cnt += 1;
-   } 
+   }
 }
 
-void ibv_allgather(struct xl_ibv_context *ctx, void *buf, size_t size, 
+void ibv_allgather(struct xl_ibv_context *ctx, void *buf, size_t size,
       uint32_t *mpi_start,
       struct ibv_handle *handle)
 {
-   // ensure to post recv before send! 
+   // ensure to post recv before send!
    for (int i = (mpi_rank + 1) % mpi_size; i != mpi_rank; i = (i + 1) % mpi_size)
-      xl_ibv_post_recv(ctx, 
+      xl_ibv_post_recv(ctx,
             (void*)((uint64_t)buf + (mpi_start[i]*size)),
             (mpi_start[i+1] - mpi_start[i])*size,
             i, handle);
@@ -425,7 +425,7 @@ void ibv_allgather(struct xl_ibv_context *ctx, void *buf, size_t size,
    MPI_Barrier(MPI_COMM_WORLD);
 
    for (int i = (mpi_rank + 1) % mpi_size; i != mpi_rank; i = (i + 1) % mpi_size)
-      xl_ibv_post_send(ctx, 
+      xl_ibv_post_send(ctx,
             (void*)((uint64_t)buf + mpi_start[mpi_rank]*size),
             (mpi_start[mpi_rank+1] - mpi_start[mpi_rank])*size,
             i, handle);

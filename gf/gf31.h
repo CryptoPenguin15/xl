@@ -23,10 +23,10 @@ const unsigned gf::p = 31;
 
 #define GF_FMT "%02d"
 
-const uint8_t gf31_inv_tab[31] = 
-   {  0,  1, 16, 21,  8, 25, 26,  9, 
-      4,  7, 28, 17, 13, 12, 20, 29,  
-      2, 11, 19, 18, 14,  3, 24, 27, 
+const uint8_t gf31_inv_tab[31] =
+   {  0,  1, 16, 21,  8, 25, 26,  9,
+      4,  7, 28, 17, 13, 12, 20, 29,
+      2, 11, 19, 18, 14,  3, 24, 27,
       22, 5,  6, 23, 10, 15, 30};
 
 inline const gf _mul( const gf &a, const gf &b)
@@ -35,11 +35,11 @@ inline const gf _mul( const gf &a, const gf &b)
 }
 
 inline const gf _inv(const gf &a)
-{ 
-   if ((a.v % 31) == 0) 
-   { 
-      puts("inv of 0"); 
-      exit(-1); 
+{
+   if ((a.v % 31) == 0)
+   {
+      puts("inv of 0");
+      exit(-1);
    }
 
    return gf31_inv_tab[a.v % 31];
@@ -59,9 +59,9 @@ struct gfv_unit
 
    inline gfv_unit(const __m128i& a) : v(a) {}
 
-   inline gfv_unit& operator=(const gfv_unit &b) 
-   { 
-      v=b.v; 
+   inline gfv_unit& operator=(const gfv_unit &b)
+   {
+      v=b.v;
       return *this;
    }
 
@@ -170,7 +170,7 @@ struct gfv_unit
       uint8_t i8[16];
    };
 
-   inline void mad(__m128i &b0, __m128i &b1, __m128i &b2, __m128i &b3, 
+   inline void mad(__m128i &b0, __m128i &b1, __m128i &b2, __m128i &b3,
          const gf &_b) const
    {
       __m128i b = _mm_set1_epi16(_b);
@@ -387,7 +387,7 @@ struct gfv_unit
       reduce16(m2);
 
       m2 = _mm_slli_epi16(m2, 8);
-      
+
       this->v = _mm_or_si128(m1, m2);
 #endif
    }
@@ -430,7 +430,7 @@ struct gfv_unit
       reduce16(m2);
 
       m2 = _mm_slli_epi16(m2, 8);
-      
+
       this->v = _mm_or_si128(m1, m2);
 #endif
    }
@@ -456,8 +456,8 @@ struct gfv_unit
       // reduce end
    }
 
-   inline gfv_unit& operator+=(const gfv_unit &b) 
-   { 
+   inline gfv_unit& operator+=(const gfv_unit &b)
+   {
       sum(this->v, b);
 
       return *this;
@@ -490,8 +490,8 @@ struct gfv_unit
       this->v = _mm_add_epi8(this->v, b.v);
    }
 
-   inline gfv_unit& operator-=(const gfv_unit &b) 
-   { 
+   inline gfv_unit& operator-=(const gfv_unit &b)
+   {
       uint8_t* res = ((uint8_t*)&(this->v));
       uint8_t* bp = ((uint8_t*)&(b.v));
 
@@ -511,11 +511,11 @@ struct gfv_unit
       return ret;
    }
 
-   inline void get(unsigned idx, uint8_t &v0, uint8_t &v1, 
+   inline void get(unsigned idx, uint8_t &v0, uint8_t &v1,
          uint8_t &v2, uint8_t &v3,
          uint8_t &v4, uint8_t &v5, uint8_t &v6, uint8_t &v7,
          uint8_t &v8, uint8_t &v9, uint8_t &va, uint8_t &vb,
-         uint8_t &vc, uint8_t &vd, uint8_t &ve, uint8_t &vf) const 
+         uint8_t &vc, uint8_t &vd, uint8_t &ve, uint8_t &vf) const
    {
       uint8_t* val = ((uint8_t*)&(this->v));
 
@@ -537,38 +537,38 @@ struct gfv_unit
       vf = val[0xf];
    }
 
-   inline bool is_zero() const 
-   { 
-      __m128i a = _mm_or_si128(v,_mm_srli_si128(v,8)); 
-      return 0 == _mm_cvtsi128_si32(_mm_or_si128(a,_mm_srli_si128(a,4))); 
+   inline bool is_zero() const
+   {
+      __m128i a = _mm_or_si128(v,_mm_srli_si128(v,8));
+      return 0 == _mm_cvtsi128_si32(_mm_or_si128(a,_mm_srli_si128(a,4)));
 //      for (unsigned i = 0; i < 16; i++)
 //         if ((((uint8_t*)&v)[i] > 0) && (((uint8_t*)&v)[i] < 31))
 //            return false;
 //
 //      return true;
-   }   
-   
-   inline static const gfv_unit rand() 
-   { 
+   }
+
+   inline static const gfv_unit rand()
+   {
       return _mm_set_epi8(::rand()%31, ::rand()%31, ::rand()%31, ::rand()%31,
                                      ::rand()%31, ::rand()%31, ::rand()%31, ::rand()%31,
             ::rand()%31, ::rand()%31, ::rand()%31, ::rand()%31,
-                                     ::rand()%31, ::rand()%31, ::rand()%31, ::rand()%31);  
+                                     ::rand()%31, ::rand()%31, ::rand()%31, ::rand()%31);
    }
 
-   inline gfv_unit& operator*=(const gf &b) 
-   { 
+   inline gfv_unit& operator*=(const gf &b)
+   {
       this->prod(*this, b);
 
       return *this;
    }
 
-   inline void set(unsigned i, const gf &a) 
-   { 
+   inline void set(unsigned i, const gf &a)
+   {
       ((uint8_t*)&v)[i] = a.v % 31;
    }
 
-   inline const gf operator[](unsigned i) const 
+   inline const gf operator[](unsigned i) const
    {
       return ((uint8_t*)&v)[i] % 31;
    }

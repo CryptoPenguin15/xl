@@ -60,9 +60,9 @@ class monomial
                d++;
 
                //index += bin[i][d];
-               //index_d += bin[N][d];	
+               //index_d += bin[N][d];
                index += binomial(i, d);
-               index_d += binomial(N, d);	
+               index_d += binomial(N, d);
             }
          index = index_d - index;
 
@@ -84,19 +84,19 @@ class monomial
                }
 
             this->mon[i] = 0;
-            this->mon[i-1] = 1;  
+            this->mon[i-1] = 1;
 
             return;
          }
 
          for (i = 1; this->mon[i] == 1; i++)
-            if (i == N-1)	
+            if (i == N-1)
                return;
 
          for (;i < N && this->mon[i] == 0; i++);
          if (i < N)
             this->mon[i] = 0;
-         this->mon[i-1] = 1;	
+         this->mon[i-1] = 1;
 
          j = i-2;
          i = 0;
@@ -105,9 +105,9 @@ class monomial
             unsigned int temp = this->mon[i];
             this->mon[i] = this->mon[j];
             this->mon[j] = temp;
-         } 	
+         }
 
-         return;	
+         return;
       }
 
 #else // #if QQ == 2
@@ -165,7 +165,7 @@ class monomial
          if (i != 1)
             mon[0] = 0;
 
-         return;	
+         return;
       }
 
 #endif // #if QQ == 2

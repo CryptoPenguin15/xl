@@ -71,7 +71,7 @@ class ibv_buffer : public T
 
          for (it = this->mr.begin(); it != this->mr.end(); it++)
          {
-            if (ibv_dereg_mr(*it)) 
+            if (ibv_dereg_mr(*it))
                fprintf(stderr, "Couldn't deregister MR\n");
          }
 
@@ -94,7 +94,7 @@ class ibv_buffer : public T
       void init_wr(struct ibv_sge &wr, unsigned offset,
             unsigned length)
       {
-         struct ibv_mr* mr = ibv_reg_mr(ctx->pd, 
+         struct ibv_mr* mr = ibv_reg_mr(ctx->pd,
                (void*)((uint64_t)(this->data) + offset),
                length,
                IBV_ACCESS_LOCAL_WRITE);
@@ -120,7 +120,7 @@ class ibv_buffer : public T
          for (unsigned j = 0; j < vec.size(); j++)
          {
             this->init_wr(this->send_wr[rank][j >> 5].sg_list[j & 0x1f],
-                  vec[j]->offset, vec[j]->length); 
+                  vec[j]->offset, vec[j]->length);
 
             send += vec[j]->length;
          }
@@ -135,7 +135,7 @@ class ibv_buffer : public T
          for (unsigned j = 0; j < vec.size(); j++)
          {
             this->init_wr(this->recv_wr[rank][j >> 5].sg_list[j & 0x1f],
-                  vec[j]->offset, vec[j]->length); 
+                  vec[j]->offset, vec[j]->length);
             recv += vec[j]->length;
          }
       }
@@ -159,7 +159,7 @@ class ibv_buffer : public T
                this->send_wr[rank][j].send_flags = IBV_SEND_SIGNALED;
 
                this->send_wr[rank][j].num_sge = num_sge;
-               this->send_wr[rank][j].sg_list = 
+               this->send_wr[rank][j].sg_list =
                   (struct ibv_sge*)malloc(num_sge * sizeof(struct ibv_sge));
 
                if (j > 0)
@@ -186,7 +186,7 @@ class ibv_buffer : public T
                   num_sge = (range_cnt - j*32);
 
                this->recv_wr[rank][j].num_sge = num_sge;
-               this->recv_wr[rank][j].sg_list = 
+               this->recv_wr[rank][j].sg_list =
                   (struct ibv_sge*)malloc(num_sge * sizeof(struct ibv_sge));
 
                if (j > 0)

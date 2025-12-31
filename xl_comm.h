@@ -22,11 +22,11 @@ typedef struct
     void *sendbuf;
     int  sendcount;
     MPI_Datatype sendtype;
-    
+
     void *recvbuf;
     int recvcount;
     MPI_Datatype recvtype;
-    
+
     MPI_Comm comm;
 
     XL_Handle *handle;
@@ -77,7 +77,7 @@ void XL_Iallgather(void *sendbuf, int  sendcount,
          comm
         );
 #endif
-        
+
 #ifdef ISEND
     for (unsigned j = 0; j < mpi_size; j++)
     {

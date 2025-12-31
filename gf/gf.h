@@ -24,22 +24,22 @@ struct gf
 
    inline gf(const uint8_t &a) : v(a) {}
 
-   inline const gf operator*(const gf &b) const 
+   inline const gf operator*(const gf &b) const
    {
-      return _mul(*this, b); 
+      return _mul(*this, b);
    }
 
-   inline const gf inv() const 
-   { 
-      return _inv(*this); 
+   inline const gf inv() const
+   {
+      return _inv(*this);
    }
 
-   inline operator uint8_t() const 
+   inline operator uint8_t() const
    {
       return v;
    }
 
-   static inline const gf rand() 
+   static inline const gf rand()
    {
       return (::rand()&(p-1));
    }

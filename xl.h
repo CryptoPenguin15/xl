@@ -38,10 +38,10 @@ class XL
     void rand_sys(orig_sys &sys)
     {
        orig_sys_transp sys_tr;
-       sys_tr.rand(); 
+       sys_tr.rand();
 
        gfv<NN> sol;
-       sol.rand(); 
+       sol.rand();
 
        if (mpi_rank == 0)
           sol.dump(stdout);
@@ -165,7 +165,7 @@ class XL
         double exp_bm = ((num_it*num_it) / 4.0) * (double)(2*BW_N*BW_N*BW_N);
 
         ECHO("\n");
-        ECHO("expected cost BW1: %.0f\n", 
+        ECHO("expected cost BW1: %.0f\n",
               (double)((double)Mac::width * (double)orig_sys::m + (double)(BW_N*BW_N))
             * (double)BW_N * num_it);
         ECHO("expected cost BM:  %.0f\n", exp_bm);
@@ -179,7 +179,7 @@ class XL
         else if (options->system == OP_SYS_READ)
            read_sys(sys);
         else
-           rand_sys(sys); 
+           rand_sys(sys);
 
         if (options->system == OP_SYS_WRITE)
            write_sys(sys);

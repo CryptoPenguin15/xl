@@ -19,11 +19,11 @@ class sparse_matrix
         unsigned idx;
         gf val;
     };
-	
+
     struct sparse_vector
     {
-        entry ent[w];	
-	
+        entry ent[w];
+
         sparse_vector(): _sz(0) {};
         ~sparse_vector() {};
 
@@ -40,7 +40,7 @@ class sparse_matrix
         inline void rand(unsigned num)
         {
             unsigned idx;
-            gf e;		
+            gf e;
 
             for(unsigned j = 0; j < num; j++)
             {
@@ -72,7 +72,7 @@ class sparse_matrix
 
             ent[ _sz ].idx = i;
             ent[ _sz ].val = e;
-		
+
             _sz++;
         }
 
@@ -93,12 +93,12 @@ class sparse_matrix
 
                 for(j = i; j >= 1; j--)
                 {
-                    if(ent[j-1].idx > tmp.idx) 
+                    if(ent[j-1].idx > tmp.idx)
                     {
                         ent[j] = ent[j-1];
                     }
-                    else 
-                    {                    
+                    else
+                    {
                         break;
                     }
                 }
@@ -121,7 +121,7 @@ class sparse_matrix
     void dump(FILE * fp) const
     {
        for (int i = 0; i < 1; i++)
-         this->val[i].dump(fp);       
+         this->val[i].dump(fp);
     }
 
     inline unsigned num_entries()
@@ -133,7 +133,7 @@ class sparse_matrix
     {
 #ifdef _OPENMP
 #pragma omp parallel for schedule(static)
-#endif 
+#endif
        for (unsigned i = 0; i < n; i++)
        {
           for (unsigned j = 0; j < w; j++)
@@ -143,7 +143,7 @@ class sparse_matrix
     }
 
     inline void rand()
-    { 
+    {
        this->set_zero();
 
        sparse_vector tmp;
@@ -182,16 +182,16 @@ class sparse_matrix
 };
 
 template<unsigned m, unsigned nc, unsigned nb, unsigned w>
-inline void sparse_matrix_mad(matrix<m, nc> &c, 
-                              const sparse_matrix<nb, nc, w> &a, 
+inline void sparse_matrix_mad(matrix<m, nc> &c,
+                              const sparse_matrix<nb, nc, w> &a,
                               matrix<m, nb> &b)
 {
     sparse_matrix_mad(c, a, b, 0, nc);
 }
 
 template<unsigned m, unsigned nc, unsigned nb, unsigned w>
-inline void sparse_matrix_prod(matrix<m, nc> &c, 
-                              const sparse_matrix<nb, nc, w> &a, 
+inline void sparse_matrix_prod(matrix<m, nc> &c,
+                              const sparse_matrix<nb, nc, w> &a,
                               matrix<m, nb> &b)
 {
     c.set_zero();
@@ -200,8 +200,8 @@ inline void sparse_matrix_prod(matrix<m, nc> &c,
 }
 
 template<unsigned m, unsigned nc, unsigned nb, unsigned w>
-inline void sparse_matrix_prod(matrix<m, nc> &c, 
-                              const sparse_matrix<nc, nb, w> &a, 
+inline void sparse_matrix_prod(matrix<m, nc> &c,
+                              const sparse_matrix<nc, nb, w> &a,
                               matrix<m, nb> &b)
 {
 #ifndef _OPENMP
@@ -246,11 +246,11 @@ inline void sparse_matrix_prod(matrix<m, nc> &c,
 
           for(unsigned j = 0; j < a.w; j+=16)
           {
-             uint8_t v0, v1, v2, v3, v4, v5, v6, v7, 
+             uint8_t v0, v1, v2, v3, v4, v5, v6, v7,
                      v8, v9, va, vb, vc, vd, ve, vf;
 
              a.val[i].get(j,
-                   v0, v1, v2, v3, v4, v5, v6, v7, 
+                   v0, v1, v2, v3, v4, v5, v6, v7,
                    v8, v9, va, vb, vc, vd, ve, vf);
 
              tmp->L[ a.idx[i*a.w + j + 0x0] ] += buf[ v0 ];
@@ -296,8 +296,8 @@ inline void sparse_matrix_prod(matrix<m, nc> &c,
 #if QQ == 31
 
 template<unsigned m, unsigned nc, unsigned nb, unsigned w>
-inline void sparse_matrix_mad(matrix<m, nc> &c, 
-                              const sparse_matrix<nb, nc, w> &a, 
+inline void sparse_matrix_mad(matrix<m, nc> &c,
+                              const sparse_matrix<nb, nc, w> &a,
                               matrix<m, nb> &b,
                               const unsigned start_row, const unsigned rows)
 {
@@ -312,7 +312,7 @@ inline void sparse_matrix_mad(matrix<m, nc> &c,
 #endif
       for(unsigned i = start_row; i < (start_row + rows); i++)
       {
-         for (unsigned k = 0; k < b.L[0].M; k++ ) 
+         for (unsigned k = 0; k < b.L[0].M; k++ )
          {
             __m128i mask = _mm_set1_epi32(0x00FF);
 
@@ -332,13 +332,13 @@ inline void sparse_matrix_mad(matrix<m, nc> &c,
          {
             uint8_t v0 = a.val[i].get(j);
 
-            for (unsigned k = 0; k < b.L[0].M; k++ ) 
+            for (unsigned k = 0; k < b.L[0].M; k++ )
                b.L[ a.idx[i*a.w + j] ].c[k].mad(
-                     buf[0].c[k].v, buf[1].c[k].v, buf[2].c[k].v, buf[3].c[k].v, 
+                     buf[0].c[k].v, buf[1].c[k].v, buf[2].c[k].v, buf[3].c[k].v,
                      v0);
          }
 
-         for (unsigned k = 0; k < c.L[0].M; k++ ) 
+         for (unsigned k = 0; k < c.L[0].M; k++ )
             c.L[i].c[k].reduce(
                   buf[0].c[k].v, buf[1].c[k].v, buf[2].c[k].v, buf[3].c[k].v);
 
@@ -350,8 +350,8 @@ inline void sparse_matrix_mad(matrix<m, nc> &c,
 #else
 
 template<unsigned m, unsigned nc, unsigned nb, unsigned w>
-inline void sparse_matrix_mad(matrix<m, nc> &c, 
-                              const sparse_matrix<nb, nc, w> &a, 
+inline void sparse_matrix_mad(matrix<m, nc> &c,
+                              const sparse_matrix<nb, nc, w> &a,
                               matrix<m, nb> &b,
                               const unsigned start_row, const unsigned rows)
 {
@@ -377,11 +377,11 @@ inline void sparse_matrix_mad(matrix<m, nc> &c,
 
          for(unsigned j = 0; j < a.w; j+=16)
          {
-            uint8_t v0, v1, v2, v3, v4, v5, v6, v7, 
+            uint8_t v0, v1, v2, v3, v4, v5, v6, v7,
                     v8, v9, va, vb, vc, vd, ve, vf;
 
             a.val[i].get(j,
-                  v0, v1, v2, v3, v4, v5, v6, v7, 
+                  v0, v1, v2, v3, v4, v5, v6, v7,
                   v8, v9, va, vb, vc, vd, ve, vf);
 
             buf[ v0 ] += b.L[ a.idx[i*a.w + j + 0x0] ];
@@ -470,8 +470,8 @@ class sparse_matrix<_m, _n, 0>
 };
 
 template<unsigned m, unsigned nc, unsigned nb>
-inline void sparse_matrix_prod(matrix<m, nc> &c, 
-                              const sparse_matrix<nb, nc, 0> &a, 
+inline void sparse_matrix_prod(matrix<m, nc> &c,
+                              const sparse_matrix<nb, nc, 0> &a,
                               matrix<m, nb> &b)
 {
 #ifdef _OPENMP

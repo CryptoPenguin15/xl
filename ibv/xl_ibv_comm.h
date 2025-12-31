@@ -1,6 +1,6 @@
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 struct xl_ibv_context {
 	struct ibv_device **dev_list;
@@ -39,7 +39,7 @@ int xl_ibv_post_send(struct xl_ibv_context *ctx, void *buf, size_t size, int tar
 
 void ibv_wait(struct xl_ibv_context *ctx, struct ibv_handle *handle);
 
-void ibv_allgather(struct xl_ibv_context *ctx, void *buf, size_t size, 
+void ibv_allgather(struct xl_ibv_context *ctx, void *buf, size_t size,
       uint32_t *mpi_start,
       struct ibv_handle *handle);
 
@@ -50,5 +50,5 @@ void ibv_allgather_blocks(struct xl_ibv_context *ctx,
 
 #ifdef __cplusplus
 }
-#endif 
+#endif
 

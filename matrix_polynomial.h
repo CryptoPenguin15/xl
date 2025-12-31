@@ -106,16 +106,16 @@ class matrix_polynomial
 
     inline void getRowDeg(unsigned rd[n])
     {
-        for(unsigned i = 0; i < n; i++) 
+        for(unsigned i = 0; i < n; i++)
         {
             rd[i] = 0;
 
-            for(unsigned d = deg; d--; ) 
+            for(unsigned d = deg; d--; )
             {
                 if(!coef[d].L[i].is_zero())
-                { 
-                    rd[i] = d; 
-                    break; 
+                {
+                    rd[i] = d;
+                    break;
                 }
             }
         }

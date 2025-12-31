@@ -42,6 +42,9 @@ make
 - Verification of GF(2), GF(16) and GF(31)
 - Removed dependency to the Boost library
 - Fixed compiler warnings using C++17
+- MQ Challenge instance format generator added,
+  specifically GF(16) also supported
+- NUMA Makefile switch, default enabled
 
 ## License
 This project is licensed under the MIT License.
